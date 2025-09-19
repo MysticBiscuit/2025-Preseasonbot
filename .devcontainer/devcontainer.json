@@ -1,0 +1,45 @@
+{
+  "name": "2025-Preseasonbot (WPILib Java)",
+  "image": "mcr.microsoft.com/devcontainers/java:1-17-bullseye",
+  "remoteUser": "vscode",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-gradle",
+        "eamodio.gitlens",
+        "editorconfig.editorconfig",
+        "/opt/vscode-wpilib-2025.vsix"
+      ],
+      "settings": {
+        "java.configuration.runtimes": [
+          { "name": "JavaSE-17", "path": "/usr/lib/jvm/msopenjdk-17", "default": true }
+        ],
+        "java.configuration.checkProjectSettingsExclusions": false
+      }
+    }
+  },
+
+  "containerEnv": {
+    "GRADLE_USER_HOME": "/workspace/.gradle"
+  },
+
+  "onCreateCommand": "bash .devcontainer/setup-wpilib.sh",
+  "postCreateCommand": "chmod +x gradlew || true",
+  "postStartCommand": "./gradlew --no-daemon tasks || true",
+
+  "mounts": [
+    "source=${localWorkspaceFolder}/.git,target=/workspaces/${localWorkspaceFolderBasename}/.git,type=bind"
+  ],
+
+  "updateContentCommand": "./gradlew --no-daemon build -x test || true",
+
+  "forwardPorts": [],
+  "shutdownAction": "stopContainer"
+}
