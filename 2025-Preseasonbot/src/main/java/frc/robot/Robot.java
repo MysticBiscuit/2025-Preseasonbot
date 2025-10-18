@@ -5,8 +5,11 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -20,6 +23,16 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private XboxController m_controller = new XboxController(Constants.OIConstants.kDriverControllerPort);
+  private CANSparkMax m_armMover = new CANSparkMax(Constants.DriveConstants.kArmMoverCanId, MotorType.kBrushless);
+  private CANSparkMax m_spinner = new CANSparkMax(Constants.DriveConstants.kArmSpinnerCanId, MotorType.kBrushless);
+  private CANSparkMax m_climber = new CANSparkMax(Constants.DriveConstants.kClimbingMechanismCanId, MotorType.kBrushless);
+  
+  private DigitalInput m_armLimitSwitch = new DigitalInput(Constants.OIConstants.kArmLimitSwitchPort);
+  private DigitalInput m_climberLimitSwitch = new DigitalInput(Constants.OIConstants.kClimberLimitSwitchPort);
+
+  private boolean isCommandRunning = false;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -58,7 +71,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -83,7 +96,28 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+    if(m_controller.getLeftBumper() && !m_armLimitSwitch.get()) {
+      m_armMover.set(0.4);
+    } else if(m_controller.getRightBumper()){
+      m_armMover.set(-0.4);
+    } else {
+      m_armMover.set(0);
+    }
+
+    if (m_controller.getRightTriggerAxis() >= 0.5) {
+      m_spinner.set(0.5);
+    }  else {
+      m_spinner.set(0);
+    }
+
+    if (m_controller.getYButton() && !m_climberLimitSwitch.get()) {
+      m_climber.set(0.2);
+    } else {
+      m_climber.set(0);
+    }
+    }
 
   @Override
   public void testInit() {
