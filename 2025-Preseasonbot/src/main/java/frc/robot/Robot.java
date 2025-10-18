@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -25,11 +26,11 @@ public class Robot extends TimedRobot {
 
   private XboxController m_controller = new XboxController(Constants.OIConstants.kDriverControllerPort);
   private CANSparkMax m_armMover = new CANSparkMax(Constants.DriveConstants.kArmMoverCanId, MotorType.kBrushless);
-  private CANSparkMax m_topSpinner = new CANSparkMax(Constants.DriveConstants.kArmSpinnerCanId, MotorType.kBrushless);
-  private CANSparkMax m_bottomSpinner = new CANSparkMax(Constants.DriveConstants.kClimbingMechanismCanId, MotorType.kBrushless);
+  private CANSparkMax m_spinner = new CANSparkMax(Constants.DriveConstants.kArmSpinnerCanId, MotorType.kBrushless);
+  private CANSparkMax m_climber = new CANSparkMax(Constants.DriveConstants.kClimbingMechanismCanId, MotorType.kBrushless);
   
-  private DigitalInput m_upArmLimitSwitch = new DigitalInput(Constants.OIConstants.kArmLimitSwitchPort);
-  private DigitalInput m_downArmLimitSwitch = new DigitalInput(Constants.OIConstants.kClimberLimitSwitchPort);
+  private DigitalInput m_armLimitSwitch = new DigitalInput(Constants.OIConstants.kArmLimitSwitchPort);
+  private DigitalInput m_climberLimitSwitch = new DigitalInput(Constants.OIConstants.kClimberLimitSwitchPort);
 
   private boolean isCommandRunning = false;
 
@@ -97,7 +98,26 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-  }
+    if(m_controller.getLeftBumper() && !m_armLimitSwitch.get()) {
+      m_armMover.set(0.4);
+    } else if(m_controller.getRightBumper()){
+      m_armMover.set(-0.4);
+    } else {
+      m_armMover.set(0);
+    }
+
+    if (m_controller.getRightTriggerAxis() >= 0.5) {
+      m_spinner.set(0.5);
+    }  else {
+      m_spinner.set(0);
+    }
+
+    if (m_controller.getYButton() && !m_climberLimitSwitch.get()) {
+      m_climber.set(0.2);
+    } else {
+      m_climber.set(0);
+    }
+    }
 
   @Override
   public void testInit() {
