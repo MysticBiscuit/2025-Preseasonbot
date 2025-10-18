@@ -6,7 +6,9 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -20,6 +22,16 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private XboxController m_controller = new XboxController(Constants.OIConstants.kDriverControllerPort);
+  private CANSparkMax m_armMover = new CANSparkMax(Constants.DriveConstants.kArmMoverCanId, MotorType.kBrushless);
+  private CANSparkMax m_topSpinner = new CANSparkMax(Constants.DriveConstants.kArmSpinnerCanId, MotorType.kBrushless);
+  private CANSparkMax m_bottomSpinner = new CANSparkMax(Constants.DriveConstants.kClimbingMechanismCanId, MotorType.kBrushless);
+  
+  private DigitalInput m_upArmLimitSwitch = new DigitalInput(Constants.OIConstants.kArmLimitSwitchPort);
+  private DigitalInput m_downArmLimitSwitch = new DigitalInput(Constants.OIConstants.kClimberLimitSwitchPort);
+
+  private boolean isCommandRunning = false;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -58,7 +70,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -83,7 +95,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+  }
 
   @Override
   public void testInit() {
