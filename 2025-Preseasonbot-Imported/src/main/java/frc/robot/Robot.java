@@ -98,21 +98,23 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    if(m_controller.getLeftBumper() && !m_armLimitSwitch.get()) {
-      m_armMover.set(0.4);
+    if(m_controller.getLeftBumper() && m_armLimitSwitch.get()) {
+      m_armMover.set(-0.1);
     } else if(m_controller.getRightBumper()){
-      m_armMover.set(-0.4);
+      m_armMover.set(0.1);
     } else {
       m_armMover.set(0);
     }
 
     if (m_controller.getRightTriggerAxis() >= 0.5) {
-      m_spinner.set(0.5);
-    }  else {
+      m_spinner.set(0.2);
+    }  else if (m_controller.getLeftTriggerAxis() >= 0.5) {
+      m_spinner.set(-0.2);
+    } else {
       m_spinner.set(0);
     }
 
-    if (m_controller.getYButton() && !m_climberLimitSwitch.get()) {
+    if (m_controller.getYButton() && m_climberLimitSwitch.get()) {
       m_climber.set(0.2);
     } else {
       m_climber.set(0);
