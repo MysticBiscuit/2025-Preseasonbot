@@ -58,6 +58,14 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
 
+      /** Creates a new DriveSubsystem. */
+  public DriveSubsystem() {
+  }
+
+  public final void resetGyroThing() {
+    m_gyro.reset();
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *
