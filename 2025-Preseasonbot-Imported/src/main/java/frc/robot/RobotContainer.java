@@ -60,7 +60,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                true, true),
+                true),
             m_robotDrive));
   }
 
@@ -92,7 +92,7 @@ public class RobotContainer {
             boolean tagExists = LimelightHelpers.getTV("");
             double tx = LimelightHelpers.getTX("");
             double area = LimelightHelpers.getTA("");
-            m_robotDrive.drive(0.2, 0, tx/50, false, true);
+            m_robotDrive.drive(0.2, 0.0, tx/50, false);
             if (!tagExists || area > 40 || DriverStation.getMatchTime() >= 10) {
                 end(false);
             }
