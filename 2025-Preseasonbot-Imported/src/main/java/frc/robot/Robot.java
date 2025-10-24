@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,6 +24,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private  DriveSubsystem m_robotDrive;
 
   private XboxController m_controller = new XboxController(Constants.OIConstants.kDriverControllerPort);
   private SparkMax m_armMover = new SparkMax(Constants.DriveConstants.kArmMoverCanId, MotorType.kBrushless);
@@ -116,6 +119,10 @@ public class Robot extends TimedRobot {
       m_climber.set(0.2);
     } else {
       m_climber.set(0);
+    }
+
+    if (m_controller.getXButton()) {
+      m_robotDrive.resetGyroThing();
     }
     }
 
